@@ -112,7 +112,7 @@ scale = 1.0
 rotation_applied = False
 
 if ROTATE_IF_PORTRAIT and h > w:
-    display_frame = cv2.rotate(display_frame, cv2.ROTATE_90_COUNTERCLOCKWISE)  #cv2.ROTATE_90_CLOCKWISE or cv2.ROTATE_180 or cv2.ROTATE_90_COUNTERCLOCKWISE
+    display_frame = cv2.rotate(display_frame, cv2.ROTATE_90_CLOCKWISE)  #cv2.ROTATE_90_CLOCKWISE or cv2.ROTATE_180 or cv2.ROTATE_90_COUNTERCLOCKWISE
     h, w = display_frame.shape[:2]
     rotation_applied = True
 
@@ -263,7 +263,8 @@ while cap.isOpened():
     
     if not ret:
         break
-    frame = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)  #cv2.ROTATE_90_CLOCKWISE or cv2.ROTATE_180 or cv2.ROTATE_90_COUNTERCLOCKWISE
+    if rotation_applied:
+        frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)  #cv2.ROTATE_90_CLOCKWISE or cv2.ROTATE_180 or cv2.ROTATE_90_COUNTERCLOCKWISE
     # cv2.imshow('Frame', frame)
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
@@ -376,8 +377,10 @@ cv2.destroyAllWindows()
 #----------------------------------------
 
 for i in range(len(rois_display)):
-    concentration = input("Enter the concentration of CaCl2/heparin used for all the assays"
-                              " in this experiment followed by _ and whether it is REST or Exercise blood").strip()
+    concentration = input("Enter the concentration of CaCl2/heparin and CBD used for all the assays (e.g Control, or 450mM, or 800mMControlCBD, or 800mMLowCBDDara, etc.)"
+                              " in this experiment followed by _ and whether it is REST or Exercise blood"
+                              "followed by _ and which visit it is (eg. visit3, visit4, ...").strip()
+    visit_num = concentration.split("_")[-1]
     filename = f"assay_{i+1}_{folder_name}_{last_number}_{concentration}.csv"
         
     # Combine the folder path and file name using os.path.join
